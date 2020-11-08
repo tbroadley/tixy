@@ -15,16 +15,8 @@
         height: 16px;
       }
 
-      #root > div > div {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
+      #root > div > canvas {
         width: 16px;
-      }
-
-      #root > div > div > div {
-        border-radius: 50%;
       }
     </style>
   </head>
@@ -45,13 +37,12 @@
         const rowArray = [];
 
         for (let x = 0; x < 16; x += 1) {
-          const cell = document.createElement("div");
+          const cell = document.createElement("canvas");
+          cell.setAttribute("width", "100");
+          cell.setAttribute("height", "100");
           row.appendChild(cell);
 
-          const circle = document.createElement("div");
-          cell.appendChild(circle);
-
-          rowArray.push(circle);
+          rowArray.push(cell);
         }
 
         rows.push(rowArray);
@@ -59,7 +50,7 @@
 
       const startTime = Date.now();
 
-      setInterval(() => {
+      const update = () => {
         const now = Date.now();
         const t = (now - startTime) / 1_000;
 
@@ -77,13 +68,20 @@
             if (radius > 1) radius = 1;
             if (radius < -1) radius = -1;
 
-            const circle = rows[y][x];
-            circle.style.width = `${15 * Math.abs(radius)}px`;
-            circle.style.height = `${15 * Math.abs(radius)}px`;
-            circle.style["background-color"] = radius >= 0 ? 'white' : 'red';
+            const canvas = rows[y][x];
+            const context = canvas.getContext("2d");
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.beginPath();
+            context.arc(canvas.width/2, canvas.height/2, (0.9*canvas.width)/2 * Math.abs(radius), 0, 2 * Math.PI);
+            context.fillStyle = radius >= 0 ? "white" : "red";
+            context.fill();
           }
         }
-      }, 1_000 / 60);
+
+        requestAnimationFrame(update);
+      }
+
+      requestAnimationFrame(update);
     </script>
   </body>
 </html>
