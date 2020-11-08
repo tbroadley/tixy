@@ -1,8 +1,25 @@
 <html>
   <head>
+    <meta charset="utf8">
+
     <style>
       body {
         background-color: black;
+
+        font-size: 16px;
+        font-family: monospace;
+        color: white;
+      }
+
+      input {
+        font-size: 16px;
+        font-family: monospace;
+        color: white;
+
+        background-color: black;
+
+        border: 1px solid red;
+        border-radius: 2px;
       }
 
       #root {
@@ -18,12 +35,27 @@
       #root > div > canvas {
         width: 16px;
       }
+
+      a {
+        color: red;
+      }
+
+      a:visited {
+        color: white;
+      }
     </style>
   </head>
   <body>
     <div id="root"></div>
 
-    <input type="text" id="formula" value="Math.sin(y/8 + t)" />
+    <label>
+      <code>(t, i, x, y) =></code>
+      <input type="text" id="formula" value="Math.sin(y/8 + t)" maxlength="20" />
+    </label>
+
+    <p>
+      A simple clone of <a href="https://tixy.land">tixy.land</a>.
+    </p>
 
     <script>
       const root = document.getElementById("root");
