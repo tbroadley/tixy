@@ -58,6 +58,8 @@
     </p>
 
     <script>
+      const SIZE = 16;
+
       const root = document.getElementById("root");
 
       const rows = [];
@@ -70,11 +72,11 @@
 
         for (let x = 0; x < 16; x += 1) {
           const cell = document.createElement("canvas");
-          cell.setAttribute("width", "100");
-          cell.setAttribute("height", "100");
+          cell.setAttribute("width", SIZE);
+          cell.setAttribute("height", SIZE);
           row.appendChild(cell);
 
-          rowArray.push(cell);
+          rowArray.push(cell.getContext("2d"));
         }
 
         rows.push(rowArray);
@@ -100,11 +102,10 @@
             if (radius > 1) radius = 1;
             if (radius < -1) radius = -1;
 
-            const canvas = rows[y][x];
-            const context = canvas.getContext("2d");
-            context.clearRect(0, 0, canvas.width, canvas.height);
+            const context = rows[y][x];
+            context.clearRect(0, 0, SIZE, SIZE);
             context.beginPath();
-            context.arc(canvas.width/2, canvas.height/2, (0.9*canvas.width)/2 * Math.abs(radius), 0, 2 * Math.PI);
+            context.arc(SIZE/2, SIZE/2, (0.9*SIZE)/2 * Math.abs(radius), 0, 2 * Math.PI);
             context.fillStyle = radius >= 0 ? "white" : "red";
             context.fill();
           }
