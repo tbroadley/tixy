@@ -23,17 +23,8 @@
       }
 
       #root {
-        margin-bottom: 16px;
-      }
-
-      #root > div {
-        display: flex;
-        flex-direction: row;;
-        height: 16px;
-      }
-
-      #root > div > canvas {
-        width: 16px;
+        width: 256px;
+        height: 256px;
       }
 
       a {
@@ -46,12 +37,14 @@
     </style>
   </head>
   <body>
-    <div id="root"></div>
+    <canvas width="256" height="256" id="root"></canvas>
 
-    <label>
-      <code>(t, i, x, y) =></code>
-      <input type="text" id="formula" value="Math.sin(y/8 + t)" maxlength="20" />
-    </label>
+    <p>
+      <label>
+        <code>(t, i, x, y) =></code>
+        <input type="text" id="formula" value="Math.sin(y/8 + t)" maxlength="20" />
+      </label>
+    </p>
 
     <p>
       A simple clone of <a href="https://tixy.land">tixy.land</a>.
@@ -60,33 +53,16 @@
     <script>
       const SIZE = 16;
 
-      const root = document.getElementById("root");
-
-      const rows = [];
-
-      for (let y = 0; y < 16; y += 1) {
-        const row = document.createElement("div");
-        root.appendChild(row);
-
-        const rowArray = [];
-
-        for (let x = 0; x < 16; x += 1) {
-          const cell = document.createElement("canvas");
-          cell.setAttribute("width", SIZE);
-          cell.setAttribute("height", SIZE);
-          row.appendChild(cell);
-
-          rowArray.push(cell.getContext("2d"));
-        }
-
-        rows.push(rowArray);
-      }
-
       const startTime = Date.now();
+
+      const root = document.getElementById("root");
+      const context = root.getContext("2d");
 
       const update = () => {
         const now = Date.now();
         const t = (now - startTime) / 1_000;
+
+        context.clearRect(0, 0, 16*SIZE, 16*SIZE);
 
         for (let y = 0; y < 16; y += 1) {
           for (let x = 0; x < 16; x += 1) {
@@ -102,10 +78,8 @@
             if (radius > 1) radius = 1;
             if (radius < -1) radius = -1;
 
-            const context = rows[y][x];
-            context.clearRect(0, 0, SIZE, SIZE);
             context.beginPath();
-            context.arc(SIZE/2, SIZE/2, (0.9*SIZE)/2 * Math.abs(radius), 0, 2 * Math.PI);
+            context.arc((x*SIZE + SIZE/2), (y*SIZE + SIZE/2), (0.9*SIZE)/2 * Math.abs(radius), 0, 2 * Math.PI);
             context.fillStyle = radius >= 0 ? "white" : "red";
             context.fill();
           }
