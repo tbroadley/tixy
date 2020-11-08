@@ -1,0 +1,89 @@
+<html>
+  <head>
+    <style>
+      body {
+        background-color: black;
+      }
+
+      #root {
+        margin-bottom: 16px;
+      }
+
+      #root > div {
+        display: flex;
+        flex-direction: row;;
+        height: 16px;
+      }
+
+      #root > div > div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        width: 16px;
+      }
+
+      #root > div > div > div {
+        border-radius: 50%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <input type="text" id="formula" value="Math.sin(y/8 + t)" />
+
+    <script>
+      const root = document.getElementById("root");
+
+      const rows = [];
+
+      for (let y = 0; y < 16; y += 1) {
+        const row = document.createElement("div");
+        root.appendChild(row);
+
+        const rowArray = [];
+
+        for (let x = 0; x < 16; x += 1) {
+          const cell = document.createElement("div");
+          row.appendChild(cell);
+
+          const circle = document.createElement("div");
+          cell.appendChild(circle);
+
+          rowArray.push(circle);
+        }
+
+        rows.push(rowArray);
+      }
+
+      const startTime = Date.now();
+
+      setInterval(() => {
+        const now = Date.now();
+        const t = (now - startTime) / 1_000;
+
+        for (let y = 0; y < 16; y += 1) {
+          for (let x = 0; x < 16; x += 1) {
+            const i = 16 * y + x;
+
+            let radius;
+            try {
+              const formula = `with(Math) { ${document.getElementById("formula").value} }`;
+              radius = eval(formula);
+            } catch {
+              radius = 0;
+            }
+            if (radius > 1) radius = 1;
+            if (radius < -1) radius = -1;
+
+            const circle = rows[y][x];
+            circle.style.width = `${15 * Math.abs(radius)}px`;
+            circle.style.height = `${15 * Math.abs(radius)}px`;
+            circle.style["background-color"] = radius >= 0 ? 'white' : 'red';
+          }
+        }
+      }, 1_000 / 60);
+    </script>
+  </body>
+</html>
